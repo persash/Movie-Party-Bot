@@ -24,15 +24,17 @@ export default class Hot implements Command {
                 message: ''
             };
             messages.forEach(obj => {
-                obj.reactions.cache.forEach(r => {
-                    if (r && r.emoji.name === cfg.upvoteEmoji) {
-                        if (!hotSuggestion.count || r.count > hotSuggestion.count) {
-                            hotSuggestion.message = obj.content;
-                            hotSuggestion.count = r.count;
+                if(obj.pinned == false) {
+                    obj.reactions.cache.forEach(r => {
+                        if (r && r.emoji.name === cfg.upvoteEmoji) {
+                            if (!hotSuggestion.count || r.count > hotSuggestion.count) {
+                                hotSuggestion.message = obj.content;
+                                hotSuggestion.count = r.count;
+                            }
                         }
-                    }
-    
-                })
+        
+                    })
+                }
             });
             if (hotSuggestion.message !== '')
                 message.reply(`here is the hottest movie party suggestion ${hotSuggestion.message} with a total of ${hotSuggestion.count} upvotes out of the latest ${fetchLimit} suggestions!`);
