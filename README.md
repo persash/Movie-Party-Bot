@@ -73,7 +73,7 @@ Every command will need to start with !mpsb.
 
 The `suggest` command requires a youtube api key to be able to search for movie trailers. You can acquire one on the official [Youtube Data Api website](https://developers.google.com/youtube/v3).
 
-The `gif` command will require a tenor api key. [Tenor API] (https://tenor.com/gifapi)
+The `gif` command will require a tenor api key. [Tenor API](https://tenor.com/gifapi)
 
 The Bot will remove any message in movie party suggestion channel that is not a youtube url and inform the original author of the message.
 
