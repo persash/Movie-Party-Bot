@@ -6,8 +6,10 @@ A discord bot to make movie party decisions much easier and informative for your
 
 - Show most upvoted suggestion
 - Gives info on imdb rating and which platforms a movie is available on
-- Find youtube trailers and suggest them to the server
+- Find youtube trailers and suggest them to the mps server channel
 - Pick a random movie suggested by the discord users
+- Search for a random gif based on a search term
+- Search for a random fact from a random movie or a random fact from a specific movie
 
 ## Requirements
 
@@ -67,8 +69,12 @@ docker run -d discordbot
 
 ## Other Info
 
+Every command will need to start with !mpsb.
+
 The `suggest` command requires a youtube api key to be able to search for movie trailers. You can acquire one on the official [Youtube Data Api website](https://developers.google.com/youtube/v3).
 
-The Bot will remove any message in movie party suggestion channel that is not a youtube url and inform the original user.
+The `gif` command will require a tenor api key. [Tenor API] (https://tenor.com/gifapi)
 
-Discord Server moderators will need to pin movies to the movie party suggestion channel to keep track what has been watched and to help the bot do its job.
+The Bot will remove any message in movie party suggestion channel that is not a youtube url and inform the original author of the message.
+
+Discord server moderators will need to pin movies to the movie party suggestion channel to keep track what has been watched and to help the bot do its job. In the future, I might at a `select` command for server admins so they dont have to do it manually.
