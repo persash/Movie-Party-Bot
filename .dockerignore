@@ -1,0 +1,12 @@
+.git
+.vscode
+coverage
+docker-compose.yml
+README.md
+Dockerfile
+example_config.json
+
+# Node Files #
+node_modules
+npm-debug.log
+npm-debug.log.*
