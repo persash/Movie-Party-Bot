@@ -1,15 +1,15 @@
-# Discord Movie Party Suggestion Bot
+# Discord Movie Party Bot
 
-A discord bot to make movie party decisions much easier and informative for your server.
+A discord bot to make movie party decisions much easier, organized, and informative for your server.
 
 ## Features
 
 - Show most upvoted suggestion
-- Gives info on imdb rating and which platforms a movie is available on
-- Find youtube trailers and suggest them to the mps server channel
-- Pick a random movie suggested by the discord users
-- Search for a random gif based on a search term
-- Search for a random fact from a random movie or a random fact from a specific movie
+- Gives info, imdb rating and which platforms/streaming service a movie is available on
+- Users can search for youtube trailers and suggest them to the mps server channel
+- Pick a random movie suggestion by letting the bot choose one from mps server channel
+- Post a random gif based on a search term. Annoy your friends with them sick gif movie references. May the odds be ever in your favor.
+- Post a random fact from a specific or random movie. Become a know it all on your server.
 
 ## Requirements
 
@@ -36,7 +36,10 @@ npm install
 ```
 ### Configuration
 
+Rename example_config.json to config.json
+
 After cloning the project and installing all dependencies, you need to add your Discord API token and YouTube API KEY in the config.json file.
+
 
 You also will need to configure the following fields in config.json custom to your server.
 
@@ -77,4 +80,4 @@ The `gif` command will require a tenor api key. [Tenor API](https://tenor.com/gi
 
 The Bot will remove any message in movie party suggestion channel that is not a youtube url and inform the original author of the message.
 
-Discord server moderators will need to pin movies to the movie party suggestion channel to keep track what has been watched and to help the bot do its job. In the future, I might at a `select` command for server admins so they dont have to do it manually.
+Discord server moderators will need to pin movie suggestions in the movie party suggestion channel to keep track what has been watched to help the bot do its job. In the future, I might add a `select` command for server admins so they dont have to do it manually.
