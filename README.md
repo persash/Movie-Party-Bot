@@ -6,8 +6,8 @@ A discord bot to make movie party decisions much easier, organized, and informat
 
 - Show most upvoted suggestion
 - Gives info, imdb rating and which platforms/streaming service a movie is available on
-- Users can search for youtube trailers and suggest them to the mps server channel
-- Pick a random movie suggestion by letting the bot choose one from mps server channel
+- Users can search for youtube trailers and suggest them to the mps text channel
+- Pick a random movie suggestion by letting the bot choose one from mps text channel
 - Post a random gif based on a search term. Annoy your friends with them sick gif movie references. May the odds be ever in your favor.
 - Post a random fact from a specific or random movie. Become a know it all on your server.
 
