@@ -7,7 +7,6 @@ export default class Ping implements Command {
     strArgs: string [] = []
 
     async execute(message: Message, mpsChannel?: TextChannel, args?: string[]) {
-        console.log('executing')
         message.reply('PoNg');
     }
 
