@@ -76,9 +76,7 @@ client.on('message', async msg => {
         var commmandSplit = commandStr.split(' ');
         var command = commands.find(c => c.name === commmandSplit[0].toLowerCase());
         if(command && command.name !== 'help') {
-          console.log(command);
           commmandSplit.shift();
-          console.log(commmandSplit);
           await command.execute(msg, mpsChannel, commmandSplit);
         } else if(commmandSplit[0] === 'help') {
           var helpEmed = new MessageEmbed();

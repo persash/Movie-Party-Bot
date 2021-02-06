@@ -9,5 +9,8 @@
     "giphyBaseUrl": "https://api.giphy.com/v1/gifs",
     "giphyApiKey": "YourApiKey",
     "tenorBaseUrl": "https://api.tenor.com/v1",
-    "tenorApiKey": "TenorApiKey"
+    "tenorApiKey": "TenorApiKey",
+    "thatMovieInfoSite": "somemoviedbsite.com",
+    "movieInfoApi": "https://www.omdbapi.com",
+    "movieInfoApiKey": "your_api_key"
 }

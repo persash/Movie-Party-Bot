@@ -18,33 +18,50 @@ export default class Info implements Command {
     
             args = args.filter(a => a.trim() !== '');
             var title = args.join(' ');
-            console.log(title);
     
             const movieService = new MovieService();
     
-            const details = await movieService.getMovieDetails(title);
+            const detailsTask = movieService.getMovieInfo(title);
+
+            const otherDetailsTask = movieService.getMovieDetails(title);
+
+            let [details, otherDetails] = await Promise.all([detailsTask, otherDetailsTask]);
+
     
-            if(!details) {
+            if(!details || details.error != "") {
                 message.reply('Movie does not exist, you typed in a show instead of a movie, or search with a better name.')
                 return;
             }
     
             var reply = `Here's info on ${title} \n`;
     
-            reply += `description: ${details.description}\n`;
+            reply += `Description: ${details.description}\n`;
     
-            reply += `imdb rating: ${details.imdbRating}\n`
+            if(details.ratings.length > 0) {
+                details.ratings.forEach(r => {
+                    reply += `${r.source}: ${r.score}\n`
+                });
+            }
+
+            reply += `Director: ${details.director}\n`;
+            reply += `Actors: ${details.actors}\n`;
+            reply += `Genre: ${details.genre}\n`;
+            reply += `Release Date: ${details.releaseDate}\n`;
+            reply += `Runtime: ${details.runTime}\n`;
+
+
+            //reply += `imdb rating: ${details.imdbRating}\n`
     
-            if (details.availableOn.length > 0) {
+            if (otherDetails.availableOn.length > 0) {
     
-                reply += `Available on ${details.availableOn.join(', ')}`;
+                reply += `Available on ${otherDetails.availableOn.join(', ')}`;
             }
     
             message.reply(reply);
         }
         catch(e) {
             console.log(e);
-            message.author.send('Error has occured while trying to fetch the hottest suggestion.')
+            message.author.send('Error has occured while trying to fetch the your movie info.')
 
         }
         

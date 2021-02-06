@@ -1,18 +1,18 @@
 import Axios from 'axios';
 
-import { MovieDetails } from '../models/moviedetails.model';
+import { MovieDetails, Ratings } from '../models/moviedetails.model';
 import { GifService } from './gif.service';
 
 import { UtilsService } from './utils.service'
 import { YoutubeService } from './youtube.service'
 
-export class MovieService {
+let cfg = require('../../config.json')
 
-    private reelGoodBaseUrl = 'https://reelgood.com';
+export class MovieService {
 
     async getMovieDetails(title: string) : Promise<MovieDetails> {
         
-        var data = await UtilsService.fetchHTML(this.reelGoodBaseUrl + `/search?q=${title.replace(' ', '%20').replace('&', '%26').replace("#", "%23")}`);
+        var data = await UtilsService.fetchHTML(`${cfg.thatMovieInfoSite}/search?q=${title.replace(' ', '%20').replace('&', '%26').replace("#", "%23")}`);
 
         var html = data.html();
 
@@ -44,12 +44,10 @@ export class MovieService {
                 i++;
             }
         }
-        console.log(showUrlRest);
-        console.log(imdbRating);
 
         details.imdbRating = imdbRating.replace(',"', "") || "None";
 
-        var movieData = await UtilsService.fetchHTML(this.reelGoodBaseUrl + `/movie${showUrlRest}`);
+        var movieData = await UtilsService.fetchHTML(cfg.thatMovieInfoSite + `/movie${showUrlRest}`);
 
         var movieHtml = movieData.html();
 
@@ -78,8 +76,6 @@ export class MovieService {
             const starzIndex = movieHtml.indexOf('streaming on Starz');
             const disneyplusIndex = movieHtml.indexOf('subscription on Disney+');
 
-            console.log(descRest);
-            console.log(movieDescriptionIndex)
             if (movieDescriptionIndex > -1 && descRest !== "") {
                 // const escapeHTML = str => str.replace(/[&<>'"]/g,
                 //     tag => ({
@@ -126,6 +122,32 @@ export class MovieService {
 
         return details;
 
+    }
+
+    async getMovieInfo(title: string) : Promise<MovieDetails> {
+        let details = new MovieDetails();
+        const { data } = await Axios.get(`${cfg.movieInfoApi}/?t=${title.replace(' ', '%20').replace('&', '%26').replace("#", "%23")}&apikey=${cfg.movieInfoApiKey}`)
+
+        if(data === undefined)
+            return null;
+
+        if(data && data.Response === "False")
+            details.error = data.Error;
+
+        
+        details.title = data.Title;
+        if(data.Ratings) {
+            details.ratings = data.Ratings.map(r => new Ratings(r.Source, r.Value));
+        }
+
+        details.director = data.Director;
+        details.actors = data.Actors;
+        details.description = data.Plot;
+        details.genre = data.Genre;
+        details.runTime = data.Runtime;
+        details.releaseDate = data.Released;
+
+        return details;
     }
 
     async findTrailer(title: string) {
