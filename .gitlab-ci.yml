@@ -14,7 +14,7 @@ build:
     - cp /configs/discordbots/mps/config.json .
     - docker build -t mps-discord-bot:latest .
     - docker stop bot-mps || true && docker rm --force bot-mps || true
-    - docker run --detach -p 3000:3000 --name bot-mps mps-discord-bot
+    - docker run --detach --restart:on-failure:5 --name bot-mps mps-discord-bot
     - docker rm $(docker ps -a -f status=exited -q) || true
     - docker rmi $(docker images | grep "^<none>" | awk "{print $3}") || true
   except:

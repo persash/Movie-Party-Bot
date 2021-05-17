@@ -82,7 +82,6 @@ client.on('message', async msg => {
           var helpEmed = new MessageEmbed();
           helpEmed.setTitle('Movie Party Suggestion Bot Help');
           helpEmed.setDescription('Here is the list of my commands');
-          var help = "Here is the list of bot commands: \n"
           commands.forEach(c => {
 
             var commandHelp = c.name
@@ -95,7 +94,7 @@ client.on('message', async msg => {
           })
           msg.reply(helpEmed)
         } else {
-          msg.reply(`Command not recognized. Try ${cfg.prefix} help.`)
+          msg.author.send(`Command not recognized. Try ${cfg.prefix} help.`)
         }
       }
     }
