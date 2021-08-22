@@ -1,20 +1,54 @@
 
 
-import { Channel, Client, GuildChannel, MessageEmbed, TextChannel } from 'discord.js'
-
-import { glob, Glob } from "glob"
-import { promisify } from 'util'
+import {  Client, Intents, MessageEmbed, TextChannel } from 'discord.js'
+import {REST} from '@discordjs/rest';
+import {Routes} from 'discord-api-types/v9';
 
 import { Command } from './interfaces/command.interface'
 import { SuggestionValidation } from './validations/suggestion.validation'
 
+import fs from "fs";
+import path from 'path'
+
+
 let cfg = require('./../config.json')
 
-const globPromises = promisify(glob);
+const client: Client = new Client(
+  {intents: [Intents.FLAGS.GUILD_EMOJIS_AND_STICKERS, Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MESSAGE_REACTIONS, Intents.FLAGS.DIRECT_MESSAGES],
+   allowedMentions: { parse: ['users', 'roles'], repliedUser: true}});
 
 const commands: Command[] = []
+const commandFiles = fs.readdirSync(path.resolve(__dirname, 'commands')).filter(file => file.endsWith('.js'));
 
-const client: Client = new Client();
+commandFiles.forEach(file => {
+  let commandClass = require(`./commands/${file}`).default
+  if(commandClass) {
+    const command = new commandClass() as Command
+    if(command.enabled) {
+      commands.push(command);
+    }
+  }
+})
+
+const rest = new REST({ version: '9' }).setToken(cfg.discordToken);
+
+(async () => {
+	try {
+		console.log('Started refreshing application (/) commands.');
+
+		await rest.put(
+      Routes.applicationCommands(cfg.discordAppId),
+      { body: commands.map(c => c.data.toJSON()) },
+    );
+    
+
+		console.log('Successfully reloaded application (/) commands.');
+	} catch (error) {
+		console.error(error);
+	}
+})()
+
+
 
 //Custom to your server. Check config.js
 const moviePartySuggestionChannelName = cfg.moviePartySuggestionChannel;
@@ -22,82 +56,31 @@ const moviePartySuggestionChannelName = cfg.moviePartySuggestionChannel;
 client.on('ready', () => {
   console.log(`Logged in as ${client.user.tag}!`);
 
-  client.user.setPresence({
-    status: "online",
-    activity: {
-      name: "!mpsb help",
-      type: "PLAYING"
-    }
-  });
-  const glob = new Glob(`${__dirname}/commands/**/*.js`, function (er, files) {
-    files.forEach(f => {
-      let commandClass = require(f).default
-      if(commandClass) {
-        const command = new commandClass() as Command
-        commands.push(command);
-      }
-
-    })
-  })
-
+  // client.user.setPresence({activities: [{ name: '!mpsb help', type: "PLAYING" }], status: 'online'});
+ 
 });
 
-client.on('message', async msg => {
-  if(msg && !msg.author.bot && msg.channel.type === 'text' && msg.type === 'DEFAULT' ) {
+client.on('interactionCreate', async interaction => {
+  if (!interaction.isCommand()) return;
+
+  const command = commands.find(c => c.name === interaction.commandName);
+
+	if (!command || command.enabled == false) return;
+
+	try {
+		await command.execute(interaction);
+	} catch (error) {
+		console.error(error);
+		await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
+	}
+});
+
+client.on('messageCreate', async msg => {
+  if(msg && !msg.author.bot && msg.channel.type === 'GUILD_TEXT' && msg.type === 'DEFAULT' ) {
     const suggestionValidation = new SuggestionValidation();
     if(msg.channel.name === moviePartySuggestionChannelName) {
       suggestionValidation.validate(msg);
       return;
-    }
-    let mpsChannel: TextChannel;
-    if(msg.content.startsWith(cfg.prefix)) {
-      try {
-        if(msg.channel.name !== moviePartySuggestionChannelName) {
-          msg.guild.channels.cache.forEach(chan => {
-              if(chan.name === moviePartySuggestionChannelName) {
-                  mpsChannel = chan as TextChannel;
-              }
-          });
-      }
-      }
-      catch {
-        console.log('error')
-        return;
-      }
-
-      if(!mpsChannel)
-      {
-        msg.reply(`"${moviePartySuggestionChannelName}" text channel does not exist on your server. Your mods are movie party poopers.`);
-        return;
-      }
-
-      if(commands.length > 0) {
-        var commandStr = msg.content.replace(`${cfg.prefix} `, '');
-        var commmandSplit = commandStr.split(' ');
-        var command = commands.find(c => c.name === commmandSplit[0].toLowerCase());
-        if(command && command.name !== 'help') {
-          commmandSplit.shift();
-          await command.execute(msg, mpsChannel, commmandSplit);
-        } else if(commmandSplit[0] === 'help') {
-          var helpEmed = new MessageEmbed();
-          helpEmed.setTitle('Movie Party Suggestion Bot Help');
-          helpEmed.setDescription('Here is the list of my commands');
-          var help = "Here is the list of bot commands: \n"
-          commands.forEach(c => {
-
-            var commandHelp = c.name
-            if(c.strArgs && c.strArgs.length > 0) {
-              c.strArgs.forEach(a => {
-                commandHelp += ` {${a}} `
-              })
-            }
-            helpEmed.addField(commandHelp, c.description);
-          })
-          msg.reply(helpEmed)
-        } else {
-          msg.reply(`Command not recognized. Try ${cfg.prefix} help.`)
-        }
-      }
     }
   }
 });

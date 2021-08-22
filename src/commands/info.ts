@@ -1,43 +1,53 @@
 import Axios from 'axios';
-import { Channel, Message, TextChannel } from 'discord.js'
+import { Channel, CommandInteraction, Interaction, Message, TextChannel } from 'discord.js'
 import { Command } from "../interfaces/command.interface"
 import * as cheerio from 'cheerio';
 import { MovieService } from '../services/movie.service';
+import { SlashCommandBuilder } from '@discordjs/builders';
 
 export default class Info implements Command {
     name: string = 'info'
-    description: string = 'returns back the imdb rating and where you can watch the movie. (Experimental. Use at own risk. Only works for movies.)'
-    strArgs: string [] = ['movie title']
+    description: string = 'returns back the imdb rating and where you can watch the movie.'
+    strArgs: string[] = ['movie title']
 
-    async execute(message: Message, mpsChannel?: TextChannel, args?: string[]) {
+    data: SlashCommandBuilder = new SlashCommandBuilder()
+        .setName(this.name)
+        .setDescription(this.description);
+
+    enabled: boolean = true;
+
+    constructor() {
+        this.data.addStringOption(option =>
+            option.setName('title')
+                .setDescription('give movie title')
+                .setRequired(true));
+    }
+
+    async execute(interaction: CommandInteraction) {
         try {
-            if(!args || args.length == 0) {
-                message.reply('You forgot a movie title, dummy.')
-                return;
-            }
-    
-            args = args.filter(a => a.trim() !== '');
-            var title = args.join(' ');
-    
+            if (!interaction.options && !interaction.options.getString("title")) return;
+
+            const title = interaction.options.getString("title");
+
             const movieService = new MovieService();
-    
+
             const detailsTask = movieService.getMovieInfo(title);
 
             const otherDetailsTask = movieService.getMovieDetails(title);
 
             let [details, otherDetails] = await Promise.all([detailsTask, otherDetailsTask]);
 
-    
-            if(!details || details.error != "") {
-                message.reply('Movie does not exist, you typed in a show instead of a movie, or search with a better name.')
+
+            if (!details || details.error != "") {
+                await interaction.reply({content: 'Movie does not exist, you typed in a show instead of a movie, or search with a better name.', ephemeral: true})
                 return;
             }
-    
-            var reply = `Here's info on ${title} \n`;
-    
+
+            let reply = `Here's info on ${title} \n`;
+
             reply += `Description: ${details.description}\n`;
-    
-            if(details.ratings.length > 0) {
+
+            if (details.ratings.length > 0) {
                 details.ratings.forEach(r => {
                     reply += `${r.source}: ${r.score}\n`
                 });
@@ -51,20 +61,20 @@ export default class Info implements Command {
 
 
             //reply += `imdb rating: ${details.imdbRating}\n`
-    
+
             if (otherDetails.availableOn.length > 0) {
-    
+
                 reply += `Available on ${otherDetails.availableOn.join(', ')}`;
             }
-    
-            message.reply(reply);
+
+            await interaction.reply(reply);
         }
-        catch(e) {
+        catch (e) {
             console.log(e);
-            message.author.send('Error has occured while trying to fetch the your movie info.')
+            await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
 
         }
-        
+
     }
 
 }

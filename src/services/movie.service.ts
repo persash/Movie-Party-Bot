@@ -12,14 +12,14 @@ export class MovieService {
 
     async getMovieDetails(title: string) : Promise<MovieDetails> {
         
-        var data = await UtilsService.fetchHTML(`${cfg.thatMovieInfoSite}/search?q=${title.replace(' ', '%20').replace('&', '%26').replace("#", "%23")}`);
+        const data = await UtilsService.fetchHTML(`${cfg.thatMovieInfoSite}/search?q=${title.replace(' ', '%20').replace('&', '%26').replace("#", "%23")}`);
 
-        var html = data.html();
+        let html = data.html();
 
         if(!data || !html)
             return null;
         
-        var showUrlIndex = html.indexOf('/movie/');
+        let showUrlIndex = html.indexOf('/movie/');
 
         if(showUrlIndex == -1)
             return null;
@@ -29,15 +29,15 @@ export class MovieService {
 
         details.title = title;
 
-        var imdbIndex = html.indexOf('imdb_rating":');
-        var imdbRating = html.substr(imdbIndex + 13, 3);
+        let imdbIndex = html.indexOf('imdb_rating":');
+        let imdbRating = html.substr(imdbIndex + 13, 3);
         //var showUrl = html.substr(showUrlIndex, 6);
         const maxAttempts = 100;
-        var i = 1;
-        var showUrlRest = "";
+        let i = 1;
+        let showUrlRest = "";
         if (showUrlIndex > -1) {
             while (i < maxAttempts) {
-                var tempChar = html.substr((showUrlIndex + 5) + i, 1);
+                let tempChar = html.substr((showUrlIndex + 5) + i, 1);
                 if (tempChar === '"')
                     break;
                 showUrlRest += tempChar;
@@ -47,19 +47,19 @@ export class MovieService {
 
         details.imdbRating = imdbRating.replace(',"', "") || "None";
 
-        var movieData = await UtilsService.fetchHTML(cfg.thatMovieInfoSite + `/movie${showUrlRest}`);
+        const movieData = await UtilsService.fetchHTML(cfg.thatMovieInfoSite + `/movie${showUrlRest}`);
 
-        var movieHtml = movieData.html();
+        let movieHtml = movieData.html();
 
         if(movieData && movieHtml) {
-            var movieDescriptionIndex = movieHtml.indexOf('"description">');
+            let movieDescriptionIndex = movieHtml.indexOf('"description">');
 
             if(movieDescriptionIndex > -1) {
                 const maxDescAttempts = 1000;
-                var j = 1;
+                let j = 1;
                 var descRest = "";
                 while(j < maxDescAttempts) {
-                    var tempChar = movieHtml.substr((movieDescriptionIndex + 13) + j, 1);
+                    let tempChar = movieHtml.substr((movieDescriptionIndex + 13) + j, 1);
                     if(tempChar === '<')
                         break;
                     descRest += tempChar;
@@ -91,7 +91,7 @@ export class MovieService {
                 details.description = 'No Description'
             }
 
-            var someArray = [];
+            let someArray = [];
 
             if (hboMaxIndex > -1) {
                 someArray.push('HBO Max')
@@ -157,8 +157,8 @@ export class MovieService {
         if(!results || !results.items || results.items.length == 0)
             return null;
 
-        var trailer = results.items.find(item => {
-            var details = item.snippet;
+        const trailer = results.items.find(item => {
+            let details = item.snippet;
             if (details.title.indexOf('Trailer') > -1 || details.title.indexOf('trailer') > -1) {
                 return item;
             }
@@ -172,12 +172,12 @@ export class MovieService {
     }
 
     async getRandomMovieFact() : Promise<any> {
-        var results = await Axios.get(`https://www.reddit.com/r/MovieDetails/random.json`);
+        const results = await Axios.get(`https://www.reddit.com/r/MovieDetails/random.json`);
 
         if(!results || !results.data || !results.data[0].data.children)
             return null;
 
-        var randomFact = results.data[0].data.children[0].data;
+        const randomFact = results.data[0].data.children[0].data;
         return {
             title: randomFact.title,
             url:randomFact.url
@@ -187,27 +187,27 @@ export class MovieService {
 
     async getMovieFact(movie: string) : Promise<any> {
 
-        var results = await Axios.get(`https://www.reddit.com/r/MovieDetails/search.json?q=${movie.replace('&', '%26').replace("#", "%23")}&restrict_sr=1`);
+        const results = await Axios.get(`https://www.reddit.com/r/MovieDetails/search.json?q=${movie.replace('&', '%26').replace("#", "%23")}&restrict_sr=1`);
 
         if(!results || !results.data.data.children[0].data.title)
             return null;
 
-        var movieSplit = movie.split(' ');
-        var capMovie = '';
+        const movieSplit = movie.split(' ');
+        let capMovie = '';
         movieSplit.forEach(m => {
             capMovie += m.trim().charAt(0).toUpperCase() + m.slice(1) + ' ';
         });
 
         capMovie = capMovie.trim();
 
-        var filter = results.data.data.children.filter(c => {
+        let filter = results.data.data.children.filter(c => {
             const title = c.data.title as string;
             if(title.indexOf(capMovie) > -1) {
                 return c;
             }
         });
 
-        var randomFact = filter[Math.floor(Math.random() * filter.length)];
+        let randomFact = filter[Math.floor(Math.random() * filter.length)];
 
         if(!randomFact)
             randomFact = results.data.data.children[Math.floor(Math.random() * results.data.data.children.length)];
@@ -225,7 +225,7 @@ export class MovieService {
         if(!results || !results.results || results.results.length == 0)
             return null;
 
-        var randomGif = results.results[Math.floor(Math.random() * results.results.length)];
+        const randomGif = results.results[Math.floor(Math.random() * results.results.length)];
 
         return randomGif;
     }

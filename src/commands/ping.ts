@@ -1,4 +1,6 @@
-import { Channel, Message, TextChannel } from 'discord.js'
+import { SlashCommandBuilder } from '@discordjs/builders'
+import { Channel, CommandInteraction, Message, TextChannel } from 'discord.js'
+
 import { Command } from "../interfaces/command.interface"
 
 export default class Ping implements Command {
@@ -6,8 +8,15 @@ export default class Ping implements Command {
     description: string = 'ping me, baby'
     strArgs: string [] = []
 
-    async execute(message: Message, mpsChannel?: TextChannel, args?: string[]) {
-        message.reply('PoNg');
+    data: SlashCommandBuilder = new SlashCommandBuilder()
+	.setName(this.name)
+	.setDescription(this.description);
+
+    enabled: boolean = false;
+
+    async execute(interaction: CommandInteraction) {
+        console.log(interaction);
+        await interaction.reply('PoNg');
     }
 
 }

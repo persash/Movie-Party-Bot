@@ -1,4 +1,5 @@
-import { Channel, Message, MessageEmbed, TextChannel } from 'discord.js'
+import { SlashCommandBuilder } from '@discordjs/builders'
+import { Channel, CommandInteraction, Interaction, Message, MessageEmbed, TextChannel } from 'discord.js'
 import { Command } from "../interfaces/command.interface"
 import { MovieService } from '../services/movie.service'
 
@@ -7,31 +8,39 @@ export default class Gif implements Command {
     description: string = 'post a random gif from your favorite movie. (Experimental, technically you could search anything)'
     strArgs: string [] = ['movie title']
 
-    async execute(message: Message, mpsChannel?: TextChannel, args?: string[]) {
+    data: SlashCommandBuilder = new SlashCommandBuilder()
+	.setName(this.name)
+	.setDescription(this.description);
+
+    enabled: boolean = true;
+
+    constructor() {
+        this.data.addStringOption(option =>
+            option.setName('title')
+            .setDescription('give movie title')
+            .setRequired(true));
+    }
+
+    async execute(interaction: CommandInteraction) {
 
         try {
-            if(!args || args.length == 0) {
-                message.reply('You forgot a movie title, dummy.')
-                return;
-            }
-    
-            args = args.filter(a => a.trim() !== '');
-            var title = args.join(' ');
-            console.log(title);
+            if(!interaction.options && !interaction.options.getString("title")) return;
 
-            var movieService = new MovieService();
+            const title = interaction.options.getString("title");
+
+            const movieService = new MovieService();
 
             const gif = await movieService.getMovieGif(title);
 
             if(!gif) {
-                message.author.send('Try again. I must of snagged something trying to get random gif');
+                await interaction.reply({ content: 'Try again. I must of snagged something trying to get random gif', ephemeral: true });
                 return;
             }
 
-            message.reply(gif.url);
+            await interaction.reply(gif.url);
         }
         catch(e) {
-
+            await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
         }
 
     }
