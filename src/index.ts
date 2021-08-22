@@ -1,5 +1,4 @@
 
-
 import {  Client, Intents, MessageEmbed, TextChannel } from 'discord.js'
 import {REST} from '@discordjs/rest';
 import {Routes} from 'discord-api-types/v9';
@@ -9,7 +8,6 @@ import { SuggestionValidation } from './validations/suggestion.validation'
 
 import fs from "fs";
 import path from 'path'
-
 
 let cfg = require('./../config.json')
 
