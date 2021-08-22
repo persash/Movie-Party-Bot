@@ -5,18 +5,18 @@ export class SuggestionValidation {
     regExp: RegExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=|\?v=)([^#\&\?]*).*/;
 
     validate(msg: Message) {
-        var match = msg.content.match(this.regExp);
+        const match = msg.content.match(this.regExp);
         if (match && match[2].length == 11) {
-            var title = '';
-            var url = '';
+            let title = '';
+            let url = '';
             if(msg.content.indexOf('~') > - 1) {
-                var split = msg.content.split('~');
+                let split = msg.content.split('~');
                 console.log(split);
                 title = split[0].trim();
                 url = split[1].trim();
             }
             else {
-                var urlIndex = msg.content.indexOf('https');
+                let urlIndex = msg.content.indexOf('https');
                 if (urlIndex > -1) {
                     url = msg.content.trim().substr(urlIndex, msg.content.length - urlIndex);
                 }

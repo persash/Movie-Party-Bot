@@ -6,6 +6,7 @@
     "youtubeApiBaseUrl": "https://www.googleapis.com/youtube/v3",
     "youtubeBaseUrl": "https://www.youtube.com/watch?v=",
     "discordToken": "your_discord_token",
+    "discordAppId": "your_discord_client_app_id",
     "giphyBaseUrl": "https://api.giphy.com/v1/gifs",
     "giphyApiKey": "YourApiKey",
     "tenorBaseUrl": "https://api.tenor.com/v1",
