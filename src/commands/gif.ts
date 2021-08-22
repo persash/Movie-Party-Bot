@@ -22,7 +22,6 @@ export default class Gif implements Command {
     }
 
     async execute(interaction: CommandInteraction) {
-
         try {
             if(!interaction.options && !interaction.options.getString("title")) return;
 
