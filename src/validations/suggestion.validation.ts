@@ -1,4 +1,4 @@
-import { Message, TextChannel } from 'discord.js';
+import { Message } from 'discord.js';
 let cfg = require('../../config.json')
 
 export class SuggestionValidation {
@@ -30,9 +30,11 @@ export class SuggestionValidation {
                             msg.author.send(`The movie you suggested has already been watched. Check ${cfg.moviePartySuggestionChannel} channel pinned messages.`)
                             msg.delete().then(() => {
                             }).catch(e => {console.log(e)});
+                            return;
                         }
                     })
-                })
+                });
+                msg.react(cfg.upvoteEmojiId);
             }
          }
          else {
