@@ -71,8 +71,8 @@ export default class Suggest implements Command {
                 await interaction.reply({ content: `The movie you suggested has already been watched. Check ${mpsChannel.name} channel pinned messages.`, ephemeral: true });
                 return;
             }
-            mpsChannel.send(`${interaction.user} has suggested ${url}`);
-            interaction.reply(`The Movie Party Collective has found a sufficient youtube trailer for your movie suggestion ${title}. Please check the ${mpsChannel.name} channel.`)
+            await mpsChannel.send(`${interaction.user} has suggested ${url}`);
+            await interaction.reply(`The Movie Party Collective has found a sufficient youtube trailer for your movie suggestion ${title}. Please check the ${mpsChannel.name} channel.`)
         }
         catch(e) {
             console.log(e);

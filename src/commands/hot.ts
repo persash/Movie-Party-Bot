@@ -34,7 +34,7 @@ export default class Hot implements Command {
             const messages = await mpsChannel.messages.fetch({ limit: fetchLimit });
 
             if (!messages) {
-                interaction.reply(`Couldn't find any messages in ${mpsChannel.name}`);
+                await interaction.reply(`Couldn't find any messages in ${mpsChannel.name}`);
                 return;
             }
 

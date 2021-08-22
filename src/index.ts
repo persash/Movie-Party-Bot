@@ -65,7 +65,7 @@ client.on('interactionCreate', async interaction => {
 
 	if (!command || command.enabled == false) return;
 
-	try {
+  try {
 		await command.execute(interaction);
 	} catch (error) {
 		console.error(error);
@@ -74,7 +74,7 @@ client.on('interactionCreate', async interaction => {
 });
 
 client.on('messageCreate', async msg => {
-  if(msg && !msg.author.bot && msg.channel.type === 'GUILD_TEXT' && msg.type === 'DEFAULT' ) {
+  if(msg && msg.channel.type === 'GUILD_TEXT' && msg.type === 'DEFAULT' ) {
     const suggestionValidation = new SuggestionValidation();
     if(msg.channel.name === moviePartySuggestionChannelName) {
       suggestionValidation.validate(msg);
