@@ -1,6 +1,6 @@
 # Discord Movie Party Bot
 
-A discord bot to make movie party decisions much easier, organized, and informative for your server.
+A discord bot to make movie party decisions easier, organized, and informative for your server.
 
 ## Features
 
@@ -81,3 +81,5 @@ The `gif` command will require a tenor api key. [Tenor API](https://tenor.com/gi
 The Bot will remove any message in movie party suggestion channel that is not a youtube url and inform the original author of the message.
 
 Discord server moderators will need to pin movie suggestions in the movie party suggestion channel to keep track what has been watched to help the bot do its job. In the future, I might add a `select` command for server admins so they dont have to do it manually.
+
+This bot uses slash commands so make sure your bot has the application permission on the server.

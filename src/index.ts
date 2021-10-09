@@ -1,5 +1,4 @@
 
-
 import {  Client, Intents, MessageEmbed, TextChannel } from 'discord.js'
 import {REST} from '@discordjs/rest';
 import {Routes} from 'discord-api-types/v9';
@@ -9,7 +8,6 @@ import { SuggestionValidation } from './validations/suggestion.validation'
 
 import fs from "fs";
 import path from 'path'
-
 
 let cfg = require('./../config.json')
 
@@ -67,7 +65,7 @@ client.on('interactionCreate', async interaction => {
 
 	if (!command || command.enabled == false) return;
 
-	try {
+  try {
 		await command.execute(interaction);
 	} catch (error) {
 		console.error(error);
@@ -76,7 +74,7 @@ client.on('interactionCreate', async interaction => {
 });
 
 client.on('messageCreate', async msg => {
-  if(msg && !msg.author.bot && msg.channel.type === 'GUILD_TEXT' && msg.type === 'DEFAULT' ) {
+  if(msg && msg.channel.type === 'GUILD_TEXT' && msg.type === 'DEFAULT' ) {
     const suggestionValidation = new SuggestionValidation();
     if(msg.channel.name === moviePartySuggestionChannelName) {
       suggestionValidation.validate(msg);
