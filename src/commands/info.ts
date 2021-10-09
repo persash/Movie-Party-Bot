@@ -32,7 +32,7 @@ export default class Info implements Command {
 
             };
 
-            await interaction.reply("Working on it...");
+            await interaction.reply({ content: 'working on it...', ephemeral: true });
 
             const title = interaction.options.getString("title");
 
@@ -46,7 +46,7 @@ export default class Info implements Command {
 
 
             if (!details || details.error != "") {
-                await interaction.reply({content: 'Movie does not exist, you typed in a show instead of a movie, or search with a better name.', ephemeral: true});
+                await interaction.editReply({content: 'Movie does not exist, you typed in a show instead of a movie, or search with a better name.'});
                 return;
             }
 
@@ -78,7 +78,7 @@ export default class Info implements Command {
         }
         catch (e) {
             console.log(e);
-            await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
+            await interaction.editReply({ content: 'There was an error while executing this command!' });
 
         }
 
