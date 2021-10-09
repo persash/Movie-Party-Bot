@@ -25,7 +25,14 @@ export default class Info implements Command {
 
     async execute(interaction: CommandInteraction) {
         try {
-            if (!interaction.options && !interaction.options.getString("title")) return;
+
+            if (!interaction.options && !interaction.options.getString("title")) {
+                await interaction.reply({content: 'Title required', ephemeral: true});
+                return;
+
+            };
+
+            await interaction.deferReply();
 
             const title = interaction.options.getString("title");
 
@@ -39,7 +46,7 @@ export default class Info implements Command {
 
 
             if (!details || details.error != "") {
-                await interaction.reply({content: 'Movie does not exist, you typed in a show instead of a movie, or search with a better name.', ephemeral: true})
+                await interaction.reply({content: 'Movie does not exist, you typed in a show instead of a movie, or search with a better name.', ephemeral: true});
                 return;
             }
 
@@ -67,7 +74,7 @@ export default class Info implements Command {
                 reply += `Available on ${otherDetails.availableOn.join(', ')}`;
             }
 
-            await interaction.reply(reply);
+            await interaction.editReply(reply);
         }
         catch (e) {
             console.log(e);
