@@ -32,7 +32,7 @@ export default class Info implements Command {
 
             };
 
-            await interaction.deferReply();
+            await interaction.reply("Working on it...");
 
             const title = interaction.options.getString("title");
 
