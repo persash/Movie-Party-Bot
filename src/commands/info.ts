@@ -1,4 +1,4 @@
-import { CacheType, Channel, ChatInputCommandInteraction, CommandInteraction, Interaction, Message, TextChannel } from 'discord.js'
+import { CacheType, ChatInputCommandInteraction } from 'discord.js'
 import { Command } from "../interfaces/command.interface"
 import { MovieService } from '../services/movie.service';
 import { SlashCommandBuilder } from '@discordjs/builders';
