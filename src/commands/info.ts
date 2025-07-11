@@ -1,7 +1,5 @@
-import Axios from 'axios';
-import { Channel, CommandInteraction, Interaction, Message, TextChannel } from 'discord.js'
+import { CacheType, Channel, ChatInputCommandInteraction, CommandInteraction, Interaction, Message, TextChannel } from 'discord.js'
 import { Command } from "../interfaces/command.interface"
-import * as cheerio from 'cheerio';
 import { MovieService } from '../services/movie.service';
 import { SlashCommandBuilder } from '@discordjs/builders';
 
@@ -23,7 +21,7 @@ export default class Info implements Command {
                 .setRequired(true));
     }
 
-    async execute(interaction: CommandInteraction) {
+    async execute(interaction: ChatInputCommandInteraction<CacheType>) {
         try {
 
             if (!interaction.options && !interaction.options.getString("title")) {

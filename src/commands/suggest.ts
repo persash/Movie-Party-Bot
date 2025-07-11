@@ -1,4 +1,4 @@
-import { Channel, CommandInteraction, Interaction, Message, TextChannel } from 'discord.js'
+import { CacheType, Channel, ChatInputCommandInteraction, CommandInteraction, Interaction, Message, TextChannel } from 'discord.js'
 
 import { Command } from "../interfaces/command.interface"
 
@@ -28,7 +28,7 @@ export default class Suggest implements Command {
             .setRequired(true));
     }
 
-    async execute(interaction: CommandInteraction) {
+    async execute(interaction: ChatInputCommandInteraction<CacheType>) {
 
         try {
             const interactionChannel = interaction.channel as TextChannel;

@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
-import { Channel, CommandInteraction, Message } from 'discord.js';
+import { CacheType, ChatInputCommandInteraction} from 'discord.js';
 
 export interface Command {
     name: string;
@@ -10,5 +10,5 @@ export interface Command {
     data: SlashCommandBuilder;
 
     // Making `args` optional
-    execute(interaction: CommandInteraction): Promise<any>;
+    execute(interaction: ChatInputCommandInteraction<CacheType>): Promise<any>;
 }

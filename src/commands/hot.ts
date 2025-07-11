@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from '@discordjs/builders'
-import { Channel, CommandInteraction, Interaction, Message, TextChannel } from 'discord.js'
+import { CacheType, ChatInputCommandInteraction, TextChannel } from 'discord.js'
 import { Command } from "../interfaces/command.interface"
 let cfg = require('../../config.json')
 
@@ -15,7 +15,7 @@ export default class Hot implements Command {
 
     enabled: boolean = true;
 
-    async execute(interaction: CommandInteraction) {
+    async execute(interaction: ChatInputCommandInteraction<CacheType>) {
         const fetchLimit = 50;
 
         try {
@@ -45,16 +45,18 @@ export default class Hot implements Command {
             messages.forEach(obj => {
                 if (obj.pinned == false) {
                     obj.reactions.cache.forEach(r => {
-                        if (r && r.emoji.name === cfg.upvoteEmoji) {
+                        if (r && r.emoji.name === cfg.upvoteEmoji && r.emoji.id === cfg.upvoteEmojiId) {
                             if (!hotSuggestion.count || r.count > hotSuggestion.count) {
+                                console.log(obj)
                                 hotSuggestion.message = obj.content;
                                 hotSuggestion.count = r.count;
                             }
                         }
-
                     })
                 }
             });
+            console.log("HOT SUGGESTION HERE")
+            console.log(hotSuggestion.count)
             if (hotSuggestion.message !== '')
                 await interaction.reply(`here is the hottest movie party suggestion ${hotSuggestion.message} with a total of ${hotSuggestion.count} upvotes out of the latest ${fetchLimit} suggestions!`);
             else

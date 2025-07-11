@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from '@discordjs/builders'
-import { CommandInteraction, TextChannel } from 'discord.js'
+import { CacheType, ChatInputCommandInteraction, CommandInteraction, TextChannel } from 'discord.js'
 import { Command } from "../interfaces/command.interface"
 let cfg = require('../../config.json')
 
@@ -15,7 +15,7 @@ export default class Random implements Command {
 
     enabled: boolean = true;
 
-    async execute(interaction: CommandInteraction) {
+    async execute(interaction: ChatInputCommandInteraction<CacheType>) {
         const fetchLimit = 50;
 
         try {

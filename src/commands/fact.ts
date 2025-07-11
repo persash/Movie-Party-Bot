@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from '@discordjs/builders'
-import { Channel, CommandInteraction, Interaction, Message, MessageEmbed, TextChannel } from 'discord.js'
+import { CacheType, ChatInputCommandInteraction } from 'discord.js'
 import { Command } from "../interfaces/command.interface"
 import { MovieService } from '../services/movie.service'
 
@@ -20,7 +20,7 @@ export default class Fact implements Command {
     }
     enabled: boolean = true;
 
-    async execute(interaction?: CommandInteraction) {
+    async execute(interaction: ChatInputCommandInteraction<CacheType>) {
 
         try {
 
