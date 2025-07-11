@@ -1,5 +1,5 @@
 
-import {  Client, Intents, MessageEmbed, TextChannel } from 'discord.js'
+import {  ChannelType, Client, Events, GatewayIntentBits, MessageType } from 'discord.js'
 import {REST} from '@discordjs/rest';
 import {Routes} from 'discord-api-types/v9';
 
@@ -12,7 +12,7 @@ import path from 'path'
 let cfg = require('./../config.json')
 
 const client: Client = new Client(
-  {intents: [Intents.FLAGS.GUILD_EMOJIS_AND_STICKERS, Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MESSAGE_REACTIONS, Intents.FLAGS.DIRECT_MESSAGES],
+  {intents: [GatewayIntentBits.GuildExpressions, GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.GuildMessageReactions, GatewayIntentBits.DirectMessages],
    allowedMentions: { parse: ['users', 'roles'], repliedUser: true}});
 
 const commands: Command[] = []
@@ -58,14 +58,14 @@ client.on('ready', () => {
  
 });
 
-client.on('interactionCreate', async interaction => {
-  if (!interaction.isCommand()) return;
+client.on(Events.InteractionCreate, async interaction => {
+  if (!interaction.isChatInputCommand()) return;
 
   const command = commands.find(c => c.name === interaction.commandName);
 
 	if (!command || command.enabled == false) return;
 
-  console.log(`${interaction.commandName}:${interaction.options}`);
+  console.log(`${interaction.commandName}`);
 
   try {
 		await command.execute(interaction);
@@ -76,7 +76,7 @@ client.on('interactionCreate', async interaction => {
 });
 
 client.on('messageCreate', async msg => {
-  if(msg && msg.channel.type === 'GUILD_TEXT' && msg.type === 'DEFAULT' ) {
+  if(msg && msg.channel.type === ChannelType.GuildText && msg.type === MessageType.Default ) {
     const suggestionValidation = new SuggestionValidation();
     if(msg.channel.name === moviePartySuggestionChannelName) {
       suggestionValidation.validate(msg);

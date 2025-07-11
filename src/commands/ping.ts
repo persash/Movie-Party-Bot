@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from '@discordjs/builders'
-import { Channel, CommandInteraction, Message, TextChannel } from 'discord.js'
+import { CacheType, Channel, ChatInputCommandInteraction, CommandInteraction, Message, TextChannel } from 'discord.js'
 
 import { Command } from "../interfaces/command.interface"
 
@@ -14,7 +14,7 @@ export default class Ping implements Command {
 
     enabled: boolean = false;
 
-    async execute(interaction: CommandInteraction) {
+    async execute(interaction: ChatInputCommandInteraction<CacheType>) {
         console.log(interaction);
         await interaction.reply('PoNg');
     }

@@ -1,7 +1,7 @@
 import { SlashCommandBuilder } from '@discordjs/builders'
-import { Channel, CommandInteraction, Interaction, Message, MessageEmbed, TextChannel } from 'discord.js'
 import { Command } from "../interfaces/command.interface"
 import { MovieService } from '../services/movie.service'
+import { ChatInputCommandInteraction, CacheType } from 'discord.js'
 
 export default class Gif implements Command {
     name: string = 'gif'
@@ -21,7 +21,7 @@ export default class Gif implements Command {
             .setRequired(true));
     }
 
-    async execute(interaction: CommandInteraction) {
+    async execute(interaction: ChatInputCommandInteraction<CacheType>) {
         try {
             if(!interaction.options && !interaction.options.getString("title")) return;
 
