@@ -23,7 +23,7 @@ jobs:
     - name: Copy config file
       run: cp ~/apps/discord-bots/mp-bot/configs/config.json .
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag mp-discord-bot:latest
+      run: docker build . --file Dockerfile --tag mp-discord-bot:$(date +%s)
     - name: Stop and remove existing container
       run: |
           docker stop mp-bot || true
@@ -31,7 +31,7 @@ jobs:
 
     - name: Run new container
       run: |
-          docker run --detach --restart=on-failure:5 --name mp-bot mps-discord-bot
+          docker run --detach --restart=on-failure:5 --name mp-bot mp-discord-bot
 
     - name: Clean up exited containers
       run: docker rm $(docker ps -a -f status=exited -q) || true
