@@ -21,7 +21,7 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Copy config file
-      run: cp ~/apps/discord-bots/mp-bot/config.json .
+      run: cp ~/apps/discord-bots/mp-bot/configs/config.json .
     - name: Build the Docker image
       run: docker build . --file Dockerfile --tag mp-discord-bot:latest
     - name: Stop and remove existing container
