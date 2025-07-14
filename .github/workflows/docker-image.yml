@@ -23,7 +23,7 @@ jobs:
     - name: Copy config file
       run: cp ~/apps/discord-bots/mp-bot/configs/config.json .
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag mp-discord-bot:$(date +%s)
+      run: docker build . --file Dockerfile --tag mp-discord-bot:latest
     - name: Stop and remove existing container
       run: |
           docker stop mp-bot || true
