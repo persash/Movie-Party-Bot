@@ -3,8 +3,14 @@ name: Docker Image CI - main
 on:
   push:
     branches: [ "main" ]
+    paths-ignore:
+      - '**/*.md'
+      - 'example_config.json'
   pull_request:
     branches: [ "main" ]
+    paths-ignore:
+      - '**/*.md'
+      - 'example_config.json'
 
 jobs:
 
@@ -14,5 +20,22 @@ jobs:
     
     steps:
     - uses: actions/checkout@v4
+    - name: Copy config file
+      run: cp /apps/discord-bots/mp-bot/config.json .
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag mp-discord-bot:$(date +%s)
+      run: docker build . --file Dockerfile --tag mp-discord-bot:latest
+    - name: Stop and remove existing container
+      run: |
+          docker stop mp-bot || true
+          docker rm --force mp-bot || true
+
+    - name: Run new container
+      run: |
+          docker run --detach --restart=on-failure:5 --name mp-bot mps-discord-bot
+
+    - name: Clean up exited containers
+      run: docker rm $(docker ps -a -f status=exited -q) || true
+
+    - name: Remove dangling images
+      run: |
+          docker images -f "dangling=true" -q | xargs -r docker rmi || true
